@@ -124,14 +124,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
               >
                 <ListItemButton
                   onClick={() => {
-                    if (siderCollapsed) {
-                      setSiderCollapsed(false);
-                      if (!isOpen) {
-                        handleClick(item.key || "");
-                      }
-                    } else {
-                      handleClick(item.key || "");
-                    }
+                    setMobileSiderOpen(false);
                   }}
                   sx={{
                     pl: isNested ? 4 : 2,
@@ -215,7 +208,15 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
                 pl: isNested ? 4 : 2,
                 py: isNested ? 1.25 : 1,
                 justifyContent: "center",
-                color: isSelected ? "primary.main" : "text.primary",
+                padding: "10px",
+                margin: "10px",
+                borderRadius: "10px",
+                "&.Mui-selected": {
+                  "&:hover": {
+                    backgroundColor: isSelected ? "#1e36e8" : "transparent",
+                  },
+                  backgroundColor: isSelected ? "#475be8" : "transparent",
+                },
               }}
             >
               <ListItemIcon
@@ -224,7 +225,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
                   transition: "margin-right 0.3s",
                   marginRight: siderCollapsed ? "0px" : "12px",
                   minWidth: "24px",
-                  color: "currentColor",
+                  color: isSelected ? "#fefefe" : "#475be8",
                 }}
               >
                 {icon ?? <ListOutlined />}
@@ -234,6 +235,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
                 primaryTypographyProps={{
                   noWrap: true,
                   fontSize: "14px",
+                  color: isSelected ? "#fefefe" : "#475be8",
                 }}
               />
             </ListItemButton>
@@ -319,6 +321,10 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
         onClick={() => handleLogout()}
         sx={{
           justifyContent: "center",
+          padding: "10px",
+          margin: "10px",
+          borderRadius: "10px",
+          color: "#475be8"
         }}
       >
         <ListItemIcon
@@ -327,7 +333,7 @@ export const ThemedSiderV2: React.FC<RefineThemedLayoutV2SiderProps> = ({
             minWidth: "24px",
             transition: "margin-right 0.3s",
             marginRight: siderCollapsed ? "0px" : "12px",
-            color: "currentColor",
+            color: "#475be8",
           }}
         >
           <Logout />

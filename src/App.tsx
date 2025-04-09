@@ -1,16 +1,27 @@
 import {
   AuthBindings,
   Authenticated,
-  GitHubBanner,
   Refine,
 } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
-
+import Title from "./components/header/Title";
+import {
+  Agent,
+  AgentProfile,
+  CreateProperties,
+  AllProperties,
+  EditProperties,
+  PropertyDetail,
+  Message,
+  Home,
+  Review
+} from './pages/index';
+import Face3Icon from '@mui/icons-material/Face3';
+import { ThemedLayoutV2 } from "./components/layout";
 import {
   ErrorComponent,
   RefineSnackbarProvider,
-  ThemedLayoutV2,
   useNotificationProvider,
 } from "@refinedev/mui";
 
@@ -28,21 +39,10 @@ import { BrowserRouter, Outlet, Route, Routes } from "react-router";
 import { Header } from "./components/header";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 import { CredentialResponse } from "./interfaces/google";
-import {
-  BlogPostCreate,
-  BlogPostEdit,
-  BlogPostList,
-  BlogPostShow,
-} from "./pages/blog-posts";
-import {
-  CategoryCreate,
-  CategoryEdit,
-  CategoryList,
-  CategoryShow,
-} from "./pages/categories";
+
 import { Login } from "./pages/login";
 import { parseJwt } from "./utils/parse-jwt";
-
+import { ApartmentOutlined, Create, DashboardOutlined, DomainOutlined, MapsHomeWorkOutlined, MessageOutlined, RateReviewOutlined, VillaOutlined } from "@mui/icons-material";
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -132,7 +132,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <GitHubBanner />
+      {/* <GitHubBanner /> */}
       <RefineKbarProvider>
         <ColorModeContextProvider>
           <CssBaseline />
@@ -146,24 +146,53 @@ function App() {
                 authProvider={authProvider}
                 resources={[
                   {
-                    name: "blog_posts",
-                    list: "/blog-posts",
-                    create: "/blog-posts/create",
-                    edit: "/blog-posts/edit/:id",
-                    show: "/blog-posts/show/:id",
-                    meta: {
-                      canDelete: true,
-                    },
+                    name: "home",
+                    list: "/home",
+                    icon: <VillaOutlined />,
+                    // create: "/blog-posts/create",
+                    // edit: "/blog-posts/edit/:id",
+                    // show: "/blog-posts/show/:id",
                   },
                   {
-                    name: "categories",
-                    list: "/categories",
-                    create: "/categories/create",
-                    edit: "/categories/edit/:id",
-                    show: "/categories/show/:id",
-                    meta: {
-                      canDelete: true,
-                    },
+                    name: "properties",
+                    list: "/properties",
+                    icon: <ApartmentOutlined/>,
+                    create: "/properties/create"
+                    // create: "/blog-posts/create",
+                    // edit: "/blog-posts/edit/:id",
+                    // show: "/blog-posts/show/:id",
+                  },
+                  {
+                    name: "agents",
+                    list: "/agent",
+                    icon: <MapsHomeWorkOutlined/>,
+                    // create: "/blog-posts/create",
+                    // edit: "/blog-posts/edit/:id",
+                    // show: "/blog-posts/show/:id",
+                  },
+                  {
+                    name: "reviews",
+                    list: "/reviews",
+                    icon: <RateReviewOutlined/>,
+                    // create: "/blog-posts/create",
+                    // edit: "/blog-posts/edit/:id",
+                    // show: "/blog-posts/show/:id",
+                  },
+                  {
+                    name: "messages",
+                    list: "/messages",
+                    icon: <MessageOutlined/>,
+                    // create: "/blog-posts/create",
+                    // edit: "/blog-posts/edit/:id",
+                    // show: "/blog-posts/show/:id",
+                  },
+                  {
+                    name: "my profile",
+                    list: "/profile",
+                    icon: <Face3Icon />,
+                    // create: "/blog-posts/create",
+                    // edit: "/blog-posts/edit/:id",
+                    // show: "/blog-posts/show/:id",
                   },
                 ]}
                 options={{
@@ -180,7 +209,10 @@ function App() {
                         key="authenticated-inner"
                         fallback={<CatchAllNavigate to="/login" />}
                       >
-                        <ThemedLayoutV2 Header={Header}>
+                        <ThemedLayoutV2 
+                          Header={()=> <Header sticky />} 
+                          Title={({collapsed}) => <Title collapsed={collapsed} />}
+                        >
                           <Outlet />
                         </ThemedLayoutV2>
                       </Authenticated>
@@ -188,20 +220,28 @@ function App() {
                   >
                     <Route
                       index
-                      element={<NavigateToResource resource="blog_posts" />}
+                      element={<NavigateToResource resource="home" />}
                     />
-                    <Route path="/blog-posts">
-                      <Route index element={<BlogPostList />} />
-                      <Route path="create" element={<BlogPostCreate />} />
-                      <Route path="edit/:id" element={<BlogPostEdit />} />
-                      <Route path="show/:id" element={<BlogPostShow />} />
+                    <Route path="/home">
+                      <Route index element={<Home />} />
                     </Route>
-                    <Route path="/categories">
-                      <Route index element={<CategoryList />} />
-                      <Route path="create" element={<CategoryCreate />} />
-                      <Route path="edit/:id" element={<CategoryEdit />} />
-                      <Route path="show/:id" element={<CategoryShow />} />
+                    <Route path="/properties">
+                      <Route index element={<AllProperties />} />
+                      <Route path="create" element={<CreateProperties />} />
                     </Route>
+                    <Route path="/agents">
+                      <Route index element={<Agent />} />
+                    </Route>
+                    <Route path="/reviews">
+                      <Route index element={<Review />} />
+                    </Route>
+                    <Route path="/messages">
+                      <Route index element={<Message />} />
+                    </Route>
+                    <Route path="/profile">
+                      <Route index element={<AgentProfile />} />
+                    </Route>
+                    
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
                   <Route
@@ -222,7 +262,7 @@ function App() {
                 <UnsavedChangesNotifier />
                 <DocumentTitleHandler />
               </Refine>
-              <DevtoolsPanel />
+              {/* <DevtoolsPanel /> */}
             </DevtoolsProvider>
           </RefineSnackbarProvider>
         </ColorModeContextProvider>
